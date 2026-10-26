@@ -14,6 +14,10 @@ jobs:
           fetch-depth: 0
 
       - name: Push to Gitee
+        env:
+          GIT_TERMINAL_PROMPT: 0
         run: |
-          git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git || true
+          git config --global user.name "andwinds"
+          git config --global user.email "andwinds@example.com"
+          git remote set-url gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git || git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git
           git push gitee main --force-with-lease
