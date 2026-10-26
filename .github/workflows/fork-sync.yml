@@ -1,8 +1,11 @@
 name: Sync upstream source
 on:
   schedule:
-    - cron: '0 */2 * * *' # UTC时间，每2小时检查一次上游，可改成 */30 * * * * 30分钟一次
-  workflow_dispatch: # 网页可以手动点按钮触发同步
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   sync-upstream:
@@ -12,6 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Sync from upstream
         run: |
           git remote add upstream https://github.com/feiniaoyun/feiniaoyun.git
