@@ -2,7 +2,7 @@ name: Sync to Gitee
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch:  # 新增：支持手动一键触发测试
 
 jobs:
   sync:
