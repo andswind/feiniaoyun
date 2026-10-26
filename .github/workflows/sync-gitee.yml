@@ -1,26 +1,21 @@
-name: Sync to Gitee
+name: Mirror to Gitee
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  sync:
+  mirror:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Sync to Gitee
+      - name: Mirror repo to Gitee
+        uses: wearerequired/git-mirror-action@v1
         env:
-          GIT_TERMINAL_PROMPT: 0
-        run: |
-          git config --global user.name "andwinds"
-          git config --global user.email "andwinds@example.com"
-          # 先删掉旧的，再新增，避免set-url判断异常
-          git remote remove gitee || true
-          git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git
-          # 单向镜像，强制覆盖，github是唯一源
-          git push gitee main --force
+          # 格式：https://用户名:令牌@gitee.com/用户名/仓库名.git
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_TOKEN }}
+        with:
+          source-repo: ${{ github.repositoryUrl }}
+          destination-repo: https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git
