@@ -2,7 +2,7 @@ name: Sync to Gitee
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # 新增：支持手动一键触发测试
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -13,10 +13,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sync to Gitee
-        uses: wearerequired/git-mirror-action@v1
+      - name: Setup SSH for Gitee
         env:
           SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
-        with:
-          source-repo: git@github.com:andswind/feiniaoyun.git
-          destination-repo: git@gitee.com:andwinds/feiniaoyun.git
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan gitee.com >> ~/.ssh/known_hosts
+
+      - name: Push mirror to Gitee
+        run: |
+          git remote add gitee git@gitee.com:andwinds/feiniaoyun.git || true
+          git push gitee main --force-with-lease
