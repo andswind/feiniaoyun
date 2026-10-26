@@ -15,5 +15,5 @@ jobs:
 
       - name: Push to Gitee
         run: |
-          git remote add gitee https://${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git || true
+          git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git || true
           git push gitee main --force-with-lease
