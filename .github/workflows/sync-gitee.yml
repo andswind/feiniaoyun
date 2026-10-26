@@ -13,11 +13,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to Gitee
+      - name: Sync to Gitee
         env:
           GIT_TERMINAL_PROMPT: 0
         run: |
           git config --global user.name "andwinds"
           git config --global user.email "andwinds@example.com"
-          git remote set-url gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git || git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git
-          git push gitee main --force-with-lease
+          # 先删掉旧的，再新增，避免set-url判断异常
+          git remote remove gitee || true
+          git remote add gitee https://andwinds:${{ secrets.GITEE_TOKEN }}@gitee.com/andwinds/feiniaoyun.git
+          # 单向镜像，强制覆盖，github是唯一源
+          git push gitee main --force
